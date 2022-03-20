@@ -172,7 +172,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2022/03/20/mongodb/" class="post-title-link" itemprop="url">Untitled</a>
+            <a href="/2022/03/20/mongodb/" class="post-title-link" itemprop="url">mongodb</a>
         </h2>
 
         <div class="post-meta">
@@ -183,7 +183,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2022-03-20 09:27:49 / Modified: 09:27:09" itemprop="dateCreated datePublished" datetime="2022-03-20T09:27:49+08:00">2022-03-20</time>
+              <time title="Created: 2022-03-20 09:49:19 / Modified: 09:50:08" itemprop="dateCreated datePublished" datetime="2022-03-20T09:49:19+08:00">2022-03-20</time>
             </span>
 
           
@@ -197,99 +197,31 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>著作权归<a target="_blank" rel="noopener" href="https://pdai.tech所有./">https://pdai.tech所有。</a> 链接：<a target="_blank" rel="noopener" href="https://www.pdai.tech/md/db/nosql-mongo/mongo-x-usage-2.html">https://www.pdai.tech/md/db/nosql-mongo/mongo-x-usage-2.html</a></p>
-<ul>
-<li><code>$project</code>：修改输入文档的结构。可以用来重命名、增加或删除域，也可以用于创建计算结果以及嵌套文档。</li>
-<li><code>$match</code>：用于过滤数据，只输出符合条件的文档。$match使用MongoDB的标准查询操作。</li>
-<li><code>$limit</code>：用来限制MongoDB聚合管道返回的文档数。</li>
-<li><code>$skip</code>：在聚合管道中跳过指定数量的文档，并返回余下的文档。</li>
-<li><code>$unwind</code>：将文档中的某一个数组类型字段拆分成多条，每条包含数组中的一个值。</li>
-<li><code>$group</code>：将集合中的文档分组，可用于统计结果。</li>
-<li><code>$sort</code>：将输入文档排序后输出。</li>
-<li><code>$geoNear</code>：输出接近某一地理位置的有序文档。</li>
-<li><code>$bucket</code>: 分组（分桶）计算。</li>
-<li><code>$facet</code> : 多次分组计算。</li>
-<li><code>$out</code>: 将结果集输出，必须是Pipline最后一个Stage。</li>
+          <ul>
+<li><code>$project</code>���޸������ĵ��Ľṹ���������������������ӻ�ɾ����Ҳ�������ڴ����������Լ�Ƕ���ĵ���</li>
+<li><code>$match</code>�����ڹ������ݣ�ֻ��������������ĵ���$matchʹ��MongoDB�ı�׼��ѯ������</li>
+<li><code>$limit</code>����������MongoDB�ۺϹܵ����ص��ĵ�����</li>
+<li><code>$skip</code>���ھۺϹܵ�������ָ���������ĵ������������µ��ĵ���</li>
+<li><code>$unwind</code>�����ĵ��е�ĳһ�����������ֶβ�ֳɶ�����ÿ�����������е�һ��ֵ��</li>
+<li><code>$group</code>���������е��ĵ����飬������ͳ�ƽ����</li>
+<li><code>$sort</code>���������ĵ�����������</li>
+<li><code>$geoNear</code>������ӽ�ĳһ����λ�õ������ĵ���</li>
+<li><code>$bucket</code>: ���飨��Ͱ�����㡣</li>
+<li><code>$facet</code> : ��η�����㡣</li>
+<li><code>$out</code>: ������������������Pipline���һ��Stage��</li>
 </ul>
 <p><code>$unwind</code></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.inventory2.aggregate( [ &#123; $unwind : <span class="string">&quot;$sizes&quot;</span> &#125; ] )</span><br></pre></td></tr></table></figure>
 
-<p><img src="assets/image-20220317202753-zj3qxuy.png" alt="image.png"></p>
-<p><img src="assets/image-20220317202728-pwzjz52.png" alt="image.png"></p>
+<p><img src="mongodb/image-20220317202753-zj3qxuy.png" alt="image.png"></p>
+<p><img src="mongodb/image-20220317202728-pwzjz52.png" alt="image.png"></p>
 <p><code>$bucket</code></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">db.artwork.aggregate( [</span><br><span class="line">   &#123;</span><br><span class="line">     $bucket: &#123;</span><br><span class="line">       groupBy: <span class="string">&quot;$price&quot;</span>,</span><br><span class="line">       boundaries: [ <span class="number">0</span>, <span class="number">200</span>, <span class="number">400</span> ],</span><br><span class="line">       <span class="keyword">default</span>: <span class="string">&quot;Other&quot;</span>,</span><br><span class="line">       output: &#123;</span><br><span class="line">         <span class="string">&quot;count&quot;</span>: &#123; $sum: <span class="number">1</span> &#125;,</span><br><span class="line">         <span class="string">&quot;titles&quot;</span> : &#123; $push: <span class="string">&quot;$title&quot;</span> &#125;</span><br><span class="line">       &#125;</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line"> ] )</span><br></pre></td></tr></table></figure>
 
-<p><img src="assets/image-20220317202810-6aahpm4.png" alt="image.png"></p>
-<p><img src="assets/image-20220317202838-b1rddzj.png" alt="image.png"></p>
-<p><img src="assets/image-20220317202903-zxbzuw2.png" alt="image.png"></p>
+<p><img src="mongodb/image-20220317202810-6aahpm4.png" alt="image.png"></p>
+<p><img src="mongodb/image-20220317202838-b1rddzj.png" alt="image.png"></p>
+<p><img src="mongodb/image-20220317202903-zxbzuw2.png" alt="image.png"></p>
 
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/30/test-my-site/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="flyin">
-      <meta itemprop="description" content="それが僕の才能。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="flyinのブログ">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/30/test-my-site/" class="post-title-link" itemprop="url">test_my_site</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-11-30 19:44:29 / Modified: 21:11:05" itemprop="dateCreated datePublished" datetime="2021-11-30T19:44:29+08:00">2021-11-30</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/hexo/" itemprop="url" rel="index"><span itemprop="name">hexo</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
       
     </div>
 
@@ -442,21 +374,9 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">2</span>
           <span class="site-state-item-name">posts</span>
         </a>
-      </div>
-      <div class="site-state-item site-state-categories">
-            <a href="/categories/">
-          
-        <span class="site-state-item-count">1</span>
-        <span class="site-state-item-name">categories</span></a>
-      </div>
-      <div class="site-state-item site-state-tags">
-            <a href="/tags/">
-          
-        <span class="site-state-item-count">1</span>
-        <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
